@@ -89,13 +89,13 @@ ifdef::cloud-hosted[]
 Open another command-line session by selecting **Terminal** > **New Terminal** from the menu of the IDE.
 To access the **system** service, run the following curl command:
 ```
-curl http://localhost:9080/system/properties
+curl -s http://localhost:9080/system/properties | jq
 ```
 {: codeblock}
 
 To access the **inventory** service, run the following curl command:
 ```
-curl http://localhost:9080/inventory/systems
+curl -s http://localhost:9080/inventory/systems | jq
 ```
 {: codeblock}
 
@@ -103,7 +103,7 @@ Visit the http://localhost:9080/health URL to see the
 overall health status of the application, as well as the aggregated data of the liveness
 and readiness checks. Run the following curl command:
 ```
-curl http://localhost:9080/health
+curl -s http://localhost:9080/health | jq
 ```
 {: codeblock}
 
@@ -114,14 +114,14 @@ checks show the state of the **inventory** service. As you might expect, both se
 You can also access the **/health/ready** endpoint by visiting the http://localhost:9080/health/ready
 URL to view the data from the readiness health checks. Run the following curl command:
 ```
-curl http://localhost:9080/health/ready
+curl -s http://localhost:9080/health/ready | jq
 ```
 {: codeblock}
 
 Similarly, access the **/health/live** endpoint by visiting the http://localhost:9080/health/live
 URL to view the data from the liveness health checks. Run the following curl command:
 ```
-curl http://localhost:9080/health/live
+curl -s http://localhost:9080/health/live | jq
 ```
 {: codeblock}
 endif::[]
@@ -183,7 +183,7 @@ include::finish/src/main/liberty/config/server.xml[]
 ----
 
 SystemReadinessCheck.java
-[source, java, linenums, role='code_column hide_tags=copyright tags=SystemReadinessCheck']
+[source, java, linenums, role='code_column tags=SystemReadinessCheck hide_tags=copyright']
 ----
 include::finish/src/main/java/io/openliberty/guides/system/SystemReadinessCheck.java[]
 ----
@@ -220,7 +220,7 @@ health checks.
 ----
 
 SystemLivenessCheck.java
-[source, java, linenums, role='code_column hide_tags=copyright tags=SystemLivenessCheck']
+[source, java, linenums, role='code_column tags=SystemLivenessCheck hide_tags=copyright']
 ----
 include::finish/src/main/java/io/openliberty/guides/system/SystemLivenessCheck.java[]
 ----
@@ -242,7 +242,7 @@ is being used, a status of `DOWN` is returned.
 ----
 
 InventoryReadinessCheck.java
-[source, java, linenums, role='code_column hide_tags=copyright tags=InventoryReadinessCheck']
+[source, java, linenums, role='code_column tags=InventoryReadinessCheck hide_tags=copyright']
 ----
 include::finish/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java[]
 ----
@@ -270,7 +270,7 @@ https://openliberty.io/guides/microprofile-config.html[Configuring microservices
 ----
 
 InventoryLivenessCheck.java
-[source, java, linenums, role='code_column hide_tags=copyright tags=InventoryLivenessCheck']
+[source, java, linenums, role='code_column tags=InventoryLivenessCheck hide_tags=copyright']
 ----
 include::finish/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java[]
 ----
@@ -315,19 +315,19 @@ ifdef::cloud-hosted[]
 While the server is running, run the following curl command to find
 the aggregated liveness and readiness health reports on the two services:
 ```
-curl http://localhost:9080/health
+curl -s http://localhost:9080/health | jq
 ```
 {: codeblock}
 
 You can also run the following curl command to view the readiness health report:
 ```
-curl http://localhost:9080/health/ready
+curl -s http://localhost:9080/health/ready | jq
 ```
 {: codeblock}
 
 or run the following curl command to view the liveness health report:
 ```
-curl http://localhost:9080/health/live
+curl -s http://localhost:9080/health/live | jq
 ```
 {: codeblock}
 
@@ -348,14 +348,14 @@ property to **true** in the **resources/CustomConfigSource.json** file.
 Because this configuration file is picked up dynamically, simply refresh the http://localhost:9080/health
 URL to see that the state of the **inventory** service changed to **DOWN**. Run the following curl command:
 ```
-curl http://localhost:9080/health
+curl -s http://localhost:9080/health | jq
 ```
 {: codeblock}
 
 The overall state of the application also changed to **DOWN** as a result. Run the following curl command
  to verify that the **inventory** service is indeed in maintenance:
 ```
-curl http://localhost:9080/inventory/systems
+curl -s http://localhost:9080/inventory/systems | jq
 ```
 {: codeblock}
 
@@ -395,7 +395,7 @@ You will implement several test methods to validate the health of the `system` a
 ----
 
 HealthIT.java
-[source, java, linenums, role='code_column hide_tags=copyright tags=HealthIT']
+[source, java, linenums, role='code_column tags=HealthIT hide_tags=copyright']
 ----
 include::finish/src/test/java/it/io/openliberty/guides/health/HealthIT.java[]
 ----
